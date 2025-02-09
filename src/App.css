@@ -24,3 +24,12 @@
   border-radius: 0.5em;
   text-align: left;
 }
+
+.searchForm input {
+  border:2px solid #ccc;
+  border-radius: 0.5em;
+  color:black;
+  background-color: #fff;
+  margin-bottom: 8px;
+  width:100%;
+}

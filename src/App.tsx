@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
+//import React, {  } from 'react'
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import './App.css'
+//import { PropsFromToggle } from 'react-bootstrap/esm/DropdownToggle';
 
 
 export interface Contact {
@@ -16,14 +18,15 @@ export interface Contact {
 }
 
 function App() {
-  //const [count, setCount] = useState(0)
+  const [filterText, setFilterText] = useState<string>("");
 
   return (
     <>
       <Container>
         <ComponentHeader />
+        <ContactSearch filterText={filterText} onFilterTextChange={setFilterText} />
         <ContactHeader />
-        <ContactList contacts={CONTACTS} />
+        <ContactList contacts={CONTACTS} filterText={filterText} />
         <AddRow />
       </Container>
       
@@ -35,8 +38,22 @@ function ComponentHeader() {
 
   return (
     <Row>
-      <Col><h1>The Contact Manager</h1></Col>
+      <Col><h1>A Contact Manager</h1></Col>
     </Row>
+  );
+}
+
+export interface Props {
+  filterText: string;
+  onFilterTextChange: (filterText: string) => void;
+ }
+
+function ContactSearch({filterText,onFilterTextChange}:Props) {
+
+  return (
+    <form className="searchForm">
+      <input type='text' value={filterText} onChange={(event) => onFilterTextChange(event.target.value)} placeholder='Search...' />
+    </form>
   );
 }
 
@@ -53,14 +70,19 @@ function ContactHeader() {
   );
 }
 
+export interface ContactListProps {
+  contacts: Contact[];
+  filterText: string;
+ }
 
-function ContactList({contacts}:{contacts:Contact[]}) {
+function ContactList({contacts ,filterText}:ContactListProps) {
   const rows: React.ReactNode[] = [];
  
   contacts.forEach((contact: Contact) => {
-    rows.push(
-      <ContactRow contact={contact} key={contact.id} />
-    )
+    if (contact.firstname.toLowerCase().indexOf(filterText.toLowerCase()) === -1) {
+      return;
+    }
+    rows.push(<ContactRow contact={contact} key={contact.id} />);
   })
   
   return (
