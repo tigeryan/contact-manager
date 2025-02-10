@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-//import React, {  } from 'react'
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Container from 'react-bootstrap/Container';
@@ -9,15 +9,21 @@ import './App.css'
 //import { PropsFromToggle } from 'react-bootstrap/esm/DropdownToggle';
 
 
-export interface Contact {
-  id: number;
-  firstname: string;
-  lastname: string;
-  email: string;
-  cellphone: string;
-}
+// Main App Component    ===   
+const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <div className="max-w-2xl mx-auto">
+        <Routes>
+          <Route path="/" element={<ContactManager />} />
+          <Route path="/contactadd" element={<ContactAdd />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
+};
 
-function App() {
+const ContactManager: React.FC = () => {
   const [filterText, setFilterText] = useState<string>("");
 
   return (
@@ -29,10 +35,29 @@ function App() {
         <ContactList contacts={CONTACTS} filterText={filterText} />
         <AddRow />
       </Container>
-      
     </>
   )
 }
+
+const ContactAdd: React.FC = () => {
+
+  return (
+    <>
+      <Container>
+        <ComponentHeader />
+        <ContactHeader />
+        <Row>
+          <Col><ButtonGroup className="me-2" aria-label="Add"><Button variant="success" as="a" href="/">Back to List</Button></ButtonGroup></Col>
+        </Row>        
+      </Container>
+    </>
+  )
+}
+
+// end routing 
+
+// begin components
+
 
 function ComponentHeader() {
 
@@ -43,10 +68,6 @@ function ComponentHeader() {
   );
 }
 
-export interface Props {
-  filterText: string;
-  onFilterTextChange: (filterText: string) => void;
- }
 
 function ContactSearch({filterText,onFilterTextChange}:Props) {
 
@@ -70,10 +91,6 @@ function ContactHeader() {
   );
 }
 
-export interface ContactListProps {
-  contacts: Contact[];
-  filterText: string;
- }
 
 function ContactList({contacts ,filterText}:ContactListProps) {
   const rows: React.ReactNode[] = [];
@@ -109,9 +126,27 @@ function AddRow() {
 
   return (
     <Row>
-      <Col><ButtonGroup className="me-2" aria-label="Add"><Button variant="success">Add New Contact</Button></ButtonGroup></Col>
+      <Col><ButtonGroup className="me-2" aria-label="Add"><Button variant="success" as="a" href="/contactadd">Add New Contact</Button></ButtonGroup></Col>
     </Row>
   );
+}
+
+export interface Contact {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  cellphone: string;
+}
+
+export interface Props {
+  filterText: string;
+  onFilterTextChange: (filterText: string) => void;
+}
+
+export interface ContactListProps {
+  contacts: Contact[];
+  filterText: string;
 }
 
 const CONTACTS: Contact[] = [
