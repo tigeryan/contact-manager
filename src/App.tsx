@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router';
+//import { useQuery } from '@tanstack/react-query'
+//import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
 import './App.css'
+//import axiosClient from "./services/axiosInstance";
 //import { PropsFromToggle } from 'react-bootstrap/esm/DropdownToggle';
-
 
 // Main App Component    ===   
 const App: React.FC = () => {
@@ -26,13 +30,35 @@ const App: React.FC = () => {
 const ContactManager: React.FC = () => {
   const [filterText, setFilterText] = useState<string>("");
 
+  const [theContacts, setContacts] = useState<Contact[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:51645/contacts.cfc?method=listContacts&returnformat=json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const json = await response.json();
+        setContacts(json);
+        setLoading(false);
+      } catch (e) {
+        setError((e as Error).message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
       <Container>
         <ComponentHeader />
         <ContactSearch filterText={filterText} onFilterTextChange={setFilterText} />
         <ContactHeader />
-        <ContactList contacts={CONTACTS} filterText={filterText} />
+        <ContactList contacts={theContacts} filterText={filterText} />
         <AddRow />
       </Container>
     </>
@@ -46,6 +72,7 @@ const ContactAdd: React.FC = () => {
       <Container>
         <ComponentHeader />
         <ContactHeader />
+        <ContactAddForm />
         <Row>
           <Col><ButtonGroup className="me-2" aria-label="Add"><Button variant="success" as="a" href="/">Back to List</Button></ButtonGroup></Col>
         </Row>        
@@ -58,9 +85,30 @@ const ContactAdd: React.FC = () => {
 
 // begin components
 
+function ContactAddForm() {
+
+  return (
+    <>
+    <Form>
+    <FloatingLabel controlId="floatingInput" label="First Name" className="mb-3">
+      <Form.Control type="firstname" placeholder="first name" required />
+    </FloatingLabel>
+    <FloatingLabel controlId="floatingInput" label="Last Name" className="mb-3">
+      <Form.Control type="lastname" placeholder="last name" required />
+    </FloatingLabel>
+    <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
+      <Form.Control type="email" placeholder="name@example.com" required />
+    </FloatingLabel>
+    <FloatingLabel controlId="floatingInput" label="Cell Phone" className="mb-3">
+      <Form.Control type="cellphone" placeholder="555-555-5555" required />
+    </FloatingLabel>
+    <ButtonGroup className="me-2" aria-label="Add"><Button variant="success">Save Contact</Button></ButtonGroup>
+    </Form>
+  </>
+  );
+}
 
 function ComponentHeader() {
-
   return (
     <Row>
       <Col><h1>A Contact Manager</h1></Col>
@@ -70,7 +118,6 @@ function ComponentHeader() {
 
 
 function ContactSearch({filterText,onFilterTextChange}:Props) {
-
   return (
     <form className="searchForm">
       <input type='text' value={filterText} onChange={(event) => onFilterTextChange(event.target.value)} placeholder='Search...' />
@@ -79,7 +126,6 @@ function ContactSearch({filterText,onFilterTextChange}:Props) {
 }
 
 function ContactHeader() {
-
   return (
     <Row className="rowHeader">
       <Col>First Name</Col>
@@ -94,7 +140,7 @@ function ContactHeader() {
 
 function ContactList({contacts ,filterText}:ContactListProps) {
   const rows: React.ReactNode[] = [];
- 
+
   contacts.forEach((contact: Contact) => {
     if (contact.firstname.toLowerCase().indexOf(filterText.toLowerCase()) === -1) {
       return;
@@ -148,7 +194,7 @@ export interface ContactListProps {
   contacts: Contact[];
   filterText: string;
 }
-
+/*
 const CONTACTS: Contact[] = [
   {
     firstname: "Emma",
@@ -221,6 +267,6 @@ const CONTACTS: Contact[] = [
     id: 10
   }
 ];
-
+*/
 
 export default App
