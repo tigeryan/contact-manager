@@ -10,10 +10,10 @@ Currently, two official plugins are available:
 ## Contact Manager Training Projects
 
 - Goal of the project is the following
--- List Contacts
--- Search Contacts
--- Add a new Contact
--- Edit a contact
--- Delete a contact
--- Print a contact
--- Email a contact card
+- List Contacts
+- Search Contacts
+- Add a new Contact
+- Edit a contact
+- Delete a contact
+- Print a contact
+- Email a contact card
