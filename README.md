@@ -9,7 +9,7 @@ Currently, two official plugins are available:
 
 ## Contact Manager Training Projects
 
-- Goal of the project is the following
+### Goal of the project is the following
 - List Contacts
 - Search Contacts
 - Add a new Contact
