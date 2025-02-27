@@ -4,7 +4,8 @@ component {
   cfheader( name="Access-Control-Allow-Origin", value="*" );
 
     // List all contacts
-    remote array function listContacts() {
+    remote any function listContacts() {
+      /*
         var contacts = [
             {
                 "firstname": "Bob",
@@ -42,7 +43,22 @@ component {
                 "id": 5
               }
         ];
-        return contacts;
+      */
+
+        getData = queryExecute("SELECT id, firstname, lastname, email, cellphone FROM contacts ORDER BY lastname ASC", {}, {datasource="contactmgr",returntype="array"} );
+
+        serializer = new JsonSerializer()
+        .asInteger("id")
+        .asString("firstname")
+        .asString("lastname")
+        .asString("email")
+        .asString("cellphone");
+
+        return serializer.serialize(getData); 
+
+
+
+        return getData;
     }
 
     // Add a new contact

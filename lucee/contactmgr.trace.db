@@ -1,0 +1,9 @@
+2025-02-24 22:34:17 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE contacts (\000d\000a        id INT PRIMARY KEY [*]AUTO_INCREMENT,\000d\000a        firstname VARCHAR(50),\000d\000a        lastname VARCHAR(50),\000d\000a        email VARCHAR(100),\000d\000a        cellphone VARCHAR(15)\000d\000a    )"; expected "HASH, CONSTRAINT, COMMENT, UNIQUE, NOT NULL, NULL, CHECK, REFERENCES, IDENTITY, ,, )"; SQL statement:
+CREATE TABLE contacts (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        firstname VARCHAR(50),
+        lastname VARCHAR(50),
+        email VARCHAR(100),
+        cellphone VARCHAR(15)
+    ) [42001-214]

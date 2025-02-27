@@ -10,8 +10,9 @@ Currently, two official plugins are available:
 ## Contact Manager Training Projects
 
 ### Goal of the project is the following
-- List Contacts
-- Search Contacts
+- [x] List Contacts from API
+- [x] Search Contacts
+- H2 Lucee CFC for DB
 - Add a new Contact
 - Edit a contact
 - Delete a contact

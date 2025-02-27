@@ -6,6 +6,13 @@ component {
     this.setClientCookies = true;
     this.serialization.preserveCaseForQueryColumn = true;
 
+    this.datasources.contactmgr = {
+    class: "org.h2.Driver",
+    connectionString: "jdbc:h2:#ExpandPath("./contactmgr")#;MODE=MSSQLServer",
+    username: "sa",
+    password: ""
+    }
+
     function onApplicationStart() {
         application.datasource = "your_datasource_name";
         return true;

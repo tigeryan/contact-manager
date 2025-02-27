@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router';
 //import { useQuery } from '@tanstack/react-query'
 //import axios from 'axios';
@@ -37,7 +37,7 @@ const ContactManager: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:51645/contacts.cfc?method=listContacts&returnformat=json');
+        const response = await fetch('http://localhost:51645/contacts.cfc?method=listContacts&returnformat=plain');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -71,7 +71,6 @@ const ContactAdd: React.FC = () => {
     <>
       <Container>
         <ComponentHeader />
-        <ContactHeader />
         <ContactAddForm />
         <Row>
           <Col><ButtonGroup className="me-2" aria-label="Add"><Button variant="success" as="a" href="/">Back to List</Button></ButtonGroup></Col>
@@ -87,23 +86,45 @@ const ContactAdd: React.FC = () => {
 
 function ContactAddForm() {
 
+  //const [formData, setFormData] = useState<FormData>({ firstname: '', lastname: '' });
+  const formRef = useRef<HTMLFormElement>(null);
+
+  /*
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({ ...prevData, [name]: value }));
+  };*/
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    const formData = new FormData(e.target),
+    formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    console.log('Form data: ', formDataObj.firstname, formDataObj.lastname, formDataObj.email, formDataObj.cellphone);
+
+    // Send the form data to the server
+
+
+  };
+
   return (
     <>
-    <Form>
-    <FloatingLabel controlId="floatingInput" label="First Name" className="mb-3">
-      <Form.Control type="firstname" placeholder="first name" required />
+    <Form ref={formRef} onSubmit={handleSubmit}>
+      <Row><Col><h2>Add New Contact</h2></Col></Row>
+    <FloatingLabel controlId="firstname" label="First Name" className="mb-3">
+      <Form.Control type="text" name="firstname" placeholder="first name" required />
     </FloatingLabel>
-    <FloatingLabel controlId="floatingInput" label="Last Name" className="mb-3">
-      <Form.Control type="lastname" placeholder="last name" required />
+    <FloatingLabel controlId="lastname" label="Last Name" className="mb-3">
+      <Form.Control type="text" name="lastname" placeholder="last name" required />
     </FloatingLabel>
-    <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">
-      <Form.Control type="email" placeholder="name@example.com" required />
+    <FloatingLabel label="email" className="mb-3">
+      <Form.Control type="email" id="email" name="email" placeholder="name@example.com" required />
     </FloatingLabel>
-    <FloatingLabel controlId="floatingInput" label="Cell Phone" className="mb-3">
-      <Form.Control type="cellphone" placeholder="555-555-5555" required />
+    <FloatingLabel controlId="cellphone" label="Cell Phone" className="mb-3">
+      <Form.Control type="text" name="cellphone" placeholder="555-555-5555" required />
     </FloatingLabel>
-    <ButtonGroup className="me-2" aria-label="Add"><Button variant="success">Save Contact</Button></ButtonGroup>
-    </Form>
+    <ButtonGroup className="me-2" aria-label="Add"><Button type="submit" variant="success">Save Contact</Button></ButtonGroup>
+    </Form><br />
   </>
   );
 }
